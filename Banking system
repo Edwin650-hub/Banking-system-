@@ -1,0 +1,141 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Banking {
+    public static void main(String[] args) {
+        new Banking().run();
+    }
+
+    ArrayList<String[]> users;
+    String[] currentUser;
+    ArrayList<String> transactions;
+    Scanner input = new Scanner(System.in);
+    boolean isLoggedIn;
+    double balance;
+
+    public Banking() {
+        users = new ArrayList<>();
+        transactions = new ArrayList<>();
+        isLoggedIn = false;
+        balance = 0.0;
+        users.add(new String[]{"Admin", "User", "1990-01-01", "admin@example.com", "1234567890", "Admin Address", "1234"});
+    }
+
+    public void run() {
+        while (true) {
+            isLoggedIn = false;
+            System.out.println("\nWelcome to Zcash");
+            System.out.println("\nLogin Portal");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
+            System.out.print("\nEnter your choice: ");
+            int choice = input.nextInt();
+            input.nextLine();
+
+            switch (choice) {
+                case 1:
+                    registerUser();
+                    break;
+                case 2:
+                    loginUser();
+                    if (isLoggedIn) {
+                        systemMenu();
+                    }
+                    break;
+                case 3:
+                    System.out.print("Do you really want to exit? (y/n): ");
+                    String exit = input.nextLine().trim().toLowerCase();
+                    if (exit.equals("y")) {
+                        System.out.println("Exiting...");
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Program exited. Goodbye!");
+                        input.close();
+                        return;
+                    } else {
+                        System.out.println("Returning to menu...");
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    void registerUser() {
+        System.out.println("\n--- User Registration ---");
+        System.out.print("First Name: ");
+        String firstName = input.nextLine();
+        System.out.print("Last Name: ");
+        String lastName = input.nextLine();
+        System.out.print("Birthdate (YYYY-MM-DD): ");
+        String birthDate = input.nextLine();
+        System.out.print("Email: ");
+        String email = input.nextLine();
+        System.out.print("Mobile Number: ");
+        String mobileNo = input.nextLine();
+        System.out.print("Home Address: ");
+        String homeAddress = input.nextLine();
+        System.out.print("Set a 4-digit PIN: ");
+        String pin = input.nextLine();
+
+        if (pin.length() != 4 || !pin.matches("\\d+")) {
+            System.out.println("Invalid PIN. It must be exactly 4 digits.");
+            return;
+        }
+        users.add(new String[]{firstName, lastName, birthDate, email, mobileNo, homeAddress, pin});
+        System.out.println("Processing...");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Registration successful! You can now log in.");
+    }
+
+    public void loginUser() {
+        System.out.println("\n--- User Login ---");
+
+        for (int attempts = 1; attempts <= 3; attempts++) {
+            System.out.print("Email: ");
+            String email = input.nextLine().trim();
+
+            String[] loggedInUser = null;
+
+            for (String[] user : users) {
+                if (user[3].equalsIgnoreCase(email)) {
+                    loggedInUser = user;
+                    break;
+                }
+            }
+
+            if (loggedInUser == null) {
+                System.out.println("Error: Email not found. Please try again. Attempts left: " + (3 - attempts));
+                continue;
+            }
+
+            for (int pinAttempts = 1; pinAttempts <= 3; pinAttempts++) {
+                System.out.print("Enter PIN: ");
+                String pin = input.nextLine().trim();
+
+                if (loggedInUser[6].equals(pin)) {
+                    isLoggedIn = true;
+                    currentUser = loggedInUser;
+                System.out.println("Logging in...");
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }    
+                    System.out.println("Login successful.");
+                    return;
+                } else {
+                    System.out.println("Incorrect PIN! Attempts left: " + (3 - pinAttempts));
+                }
+            }
+
+            System.out.println("Too many fail
